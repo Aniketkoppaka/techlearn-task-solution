@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 const CodeHighlighter = ({ code }) => {
     const rules = [
+        // Standard Python coloring rules
         { regex: /#(.*)/g, color: '#6a9955' },
         { regex: /('.*?'|".*?")/g, color: '#ce9178' },
         { regex: /\b(def|class|import|from|return|if|else|elif|while|for|in|try|except|print|input|with|as|pass|break|continue)\b/g, color: '#c586c0' },
@@ -45,6 +46,9 @@ const getFeatureIcon = (text) => {
 
 const formatText = (text) => {
     if (!text) return null;
+
+    // Quick and dirty markdown parser for **bold** and `code`
+    // We don't need a full library for just these two.
     const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
 
     return parts.map((part, index) => {

@@ -8,6 +8,8 @@ app.use(express.json());
 
 
 
+// This mock data object is getting huge.
+// TODO: Eventually move this to a proper DB (MongoDB/Postgres) when we need user accounts.
 const COURSE_DATA = {
 
     id: "python-101",
@@ -3356,9 +3358,13 @@ app.get('/api/topic/:id', (req, res) => {
     }
 });
 
+// Serve static files from the React app
+// This lets us deploy the whole thing as a single service on Render
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
+// The "catchall" handler: sends back React's index.html file.
+// Needed for client-side routing to work on refresh.
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });

@@ -7,12 +7,19 @@ const Layout = () => {
     const [courseData, setCourseData] = useState(null);
     const [theme, setTheme] = useState('light');
     const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleTheme = () => {
+        // Toggle simple light/dark mode
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
         document.documentElement.setAttribute('data-theme', newTheme);
     };
+
+    // Close mobile menu when route changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [window.location.pathname]);
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -26,8 +33,17 @@ const Layout = () => {
     return (
         <div className="app-container">
             <header className="app-header">
-                <div className="logo">
-                    <img src="/logo.png" alt="TechLearn Solutions" className="logo-image" />
+                <div className="header-left">
+                    <button
+                        className="mobile-menu-btn"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        <Menu size={24} color="var(--text-nav)" />
+                    </button>
+                    <div className="logo">
+                        <img src="/logo.png" alt="TechLearn Solutions" className="logo-image" />
+                    </div>
                 </div>
                 <nav className="top-nav">
                     <a href="#" className="nav-link active">Learn</a>
@@ -41,7 +57,13 @@ const Layout = () => {
             </header>
 
             <div className="main-layout">
-                <aside className={`sidebar ${isSidebarMinimized ? 'minimized' : ''}`}>
+                {/* Mobile Overlay */}
+                <div
+                    className={`mobile-overlay ${isMobileMenuOpen ? 'visible' : ''}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                ></div>
+
+                <aside className={`sidebar ${isSidebarMinimized ? 'minimized' : ''} ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                     <div className="sidebar-header">
                         <h2>Course Topics</h2>
                         <button
