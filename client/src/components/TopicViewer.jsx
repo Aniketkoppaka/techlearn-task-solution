@@ -1,29 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-// Simple Regex-based Syntax Highlighter for Python
 const CodeHighlighter = ({ code }) => {
-    // Basic Python syntax rules
     const rules = [
-        { regex: /#(.*)/g, color: '#6a9955' }, // Comments (Green)
-        { regex: /('.*?'|".*?")/g, color: '#ce9178' }, // Strings (Orange/Brown)
-        { regex: /\b(def|class|import|from|return|if|else|elif|while|for|in|try|except|print|input|with|as|pass|break|continue)\b/g, color: '#c586c0' }, // Keywords (Pink/Purple)
-        { regex: /\b(True|False|None)\b/g, color: '#569cd6' }, // Booleans/None (Blue)
-        { regex: /\b(\d+)\b/g, color: '#b5cea8' }, // Numbers (Light Green)
-        { regex: /\b(self)\b/g, color: '#569cd6' }, // Self (Blue)
+        { regex: /#(.*)/g, color: '#6a9955' },
+        { regex: /('.*?'|".*?")/g, color: '#ce9178' },
+        { regex: /\b(def|class|import|from|return|if|else|elif|while|for|in|try|except|print|input|with|as|pass|break|continue)\b/g, color: '#c586c0' },
+        { regex: /\b(True|False|None)\b/g, color: '#569cd6' },
+        { regex: /\b(\d+)\b/g, color: '#b5cea8' },
+        { regex: /\b(self)\b/g, color: '#569cd6' },
     ];
 
-    // We need to match and wrap parts of the string.
-    // A simple way for a "fun" task without libraries is to split and map, but regex overlapping is tricky.
-    // For this complexity, we'll try a simpler approach: strict tokenizing is hard, but we can do a multi-pass or just use a few key colors.
-
-    // Safer approach for this context: Split by tokens and colorize known matches.
     const tokens = code.split(/((?:#.*)|(?:"(?:[^"\\]|\\.)*")|(?:'(?:[^'\\]|\\.)*')|\b(?:\d+)\b|\b(?:def|class|import|from|return|if|else|elif|while|for|in|try|except|print|input|with|as|pass|break|continue|True|False|None|self)\b|\s+)/g);
 
     return (
         <code>
             {tokens.map((token, i) => {
-                let style = { color: '#d4d4d4' }; // Default
+                let style = { color: '#d4d4d4' };
 
                 if (token.startsWith('#')) style.color = '#6a9955';
                 else if (token.startsWith('"') || token.startsWith("'")) style.color = '#ce9178';
@@ -37,7 +30,6 @@ const CodeHighlighter = ({ code }) => {
     );
 };
 
-// Helper to get engaging icons for Python features
 const getFeatureIcon = (text) => {
     const lower = text.toLowerCase();
     if (lower.includes('read') || lower.includes('learn')) return '📖';
@@ -51,11 +43,8 @@ const getFeatureIcon = (text) => {
     return '✨';
 };
 
-// Helper to simple markdown parsing (Bold and Inline Code)
 const formatText = (text) => {
     if (!text) return null;
-    // Split by **bold** or `code`
-    // Regex captures formatting groups
     const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
 
     return parts.map((part, index) => {
@@ -114,14 +103,12 @@ const TopicViewer = () => {
             <div className="topic-divider"></div>
 
             {content.sections.map((section, idx) => {
-                // Special handling based on heading to choose specific layouts (e.g. Features = Grid)
                 const isFeaturesHeading = section.heading === 'Features';
                 const isDataTypesHeading = section.heading === 'Standard Data Types';
                 const isGrid = isFeaturesHeading || isDataTypesHeading;
 
                 switch (section.type) {
                     case 'text':
-                        // Split content by newlines to creat separate paragraphs
                         const paragraphs = section.body.split('\n').filter(p => p.trim() !== '');
                         return (
                             <div key={idx} className="content-section text-section">
@@ -142,7 +129,6 @@ const TopicViewer = () => {
                                 {isGrid ? (
                                     <div className="features-grid">
                                         {section.items.map((item, i) => {
-                                            // Check for pipe delimiter to split Type | Example
                                             const parts = item.includes('|') ? item.split('|') : [item];
                                             const title = parts[0].trim();
                                             const example = parts[1] ? parts[1].trim() : null;
@@ -166,7 +152,7 @@ const TopicViewer = () => {
                                     <ul className="section-list-styled">
                                         {section.items.map((item, i) => (
                                             <li key={i}>
-                                                <span className="list-bullet">Checking...</span> {/* Will use CSS to make this a checkmark */}
+                                                <span className="list-bullet">Checking...</span>
                                                 <span>{formatText(item)}</span>
                                             </li>
                                         ))}

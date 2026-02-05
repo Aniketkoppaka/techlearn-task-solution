@@ -8,8 +8,8 @@ app.use(express.json());
 
 
 
-// Mock Data matching the screenshots and inspection HTML
 const COURSE_DATA = {
+
     id: "python-101",
     title: "Introduction To Python",
     topics: [
@@ -3333,7 +3333,6 @@ s2.start()`
     }
 };
 
-// Endpoints
 app.get('/api/course/:id', (req, res) => {
     res.json({
         id: COURSE_DATA.id,
@@ -3344,7 +3343,6 @@ app.get('/api/course/:id', (req, res) => {
 
 app.get('/api/topic/:id', (req, res) => {
     const topicContent = COURSE_DATA.content[req.params.id];
-    // Return empty/placeholder content for other topics so the UI doesn't break
     if (topicContent) {
         res.json(topicContent);
     } else {
@@ -3358,12 +3356,9 @@ app.get('/api/topic/:id', (req, res) => {
     }
 });
 
-// Serve static files from the React app
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });

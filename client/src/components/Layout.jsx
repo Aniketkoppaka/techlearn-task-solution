@@ -15,22 +15,18 @@ const Layout = () => {
     };
 
     useEffect(() => {
-        // Set initial theme
         document.documentElement.setAttribute('data-theme', theme);
 
-        // Fetch course structure (mock ID 'python-101')
         fetch('/api/course/python-101')
             .then(res => res.json())
             .then(data => setCourseData(data))
             .catch(err => console.error("Failed to load course", err));
-    }, []); // Only run on mount, theme updates handled in toggleTheme
+    }, []);
 
     return (
         <div className="app-container">
-            {/* Header */}
             <header className="app-header">
                 <div className="logo">
-                    {/* Logo Image */}
                     <img src="/logo.png" alt="TechLearn Solutions" className="logo-image" />
                 </div>
                 <nav className="top-nav">
@@ -45,7 +41,6 @@ const Layout = () => {
             </header>
 
             <div className="main-layout">
-                {/* Sidebar */}
                 <aside className={`sidebar ${isSidebarMinimized ? 'minimized' : ''}`}>
                     <div className="sidebar-header">
                         <h2>Course Topics</h2>
@@ -72,7 +67,7 @@ const Layout = () => {
                                 key={topic.id}
                                 to={`/topic/${topic.id}`}
                                 className={({ isActive }) => `topic-item ${isActive ? 'active' : ''}`}
-                                title={isSidebarMinimized ? topic.title : ''} // Show title on hover when minimized
+                                title={isSidebarMinimized ? topic.title : ''}
                             >
                                 <span className="topic-number">{index + 1}</span>
                                 <span className="topic-title">{topic.title}</span>
@@ -81,7 +76,6 @@ const Layout = () => {
                     </div>
                 </aside>
 
-                {/* Main Content Area */}
                 <main className={`content-area ${isSidebarMinimized ? 'expanded' : ''}`}>
                     <Outlet />
                 </main>
