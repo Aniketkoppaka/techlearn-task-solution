@@ -1,0 +1,13 @@
+{
+    "name": "techlearn-task-solution",
+    "version": "1.0.0",
+    "description": "Full Stack Solution for TechLearn Solutions Interview",
+    "main": "server/server.js",
+    "scripts": {
+        "setup": "npm install --prefix client && npm install --prefix server && npm run build --prefix client",
+        "start": "node server/server.js",
+        "dev": "echo 'Run client and server separately or install concurrently'"
+    },
+    "author": "Candidate",
+    "license": "ISC"
+}

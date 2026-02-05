@@ -1,0 +1,973 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Default to Light Mode Variables */
+  --bg-gradient-start: #daf0fa;
+  --bg-gradient-mid: #bceaff;
+  --bg-gradient-end: #bceaff;
+
+  --text-primary: #1e3a8a;
+  /* Deep Blue for headings */
+  --text-secondary: #334155;
+  /* Slate for body */
+  --text-nav: #00184f;
+
+  --sidebar-bg: rgba(255, 255, 255, 0.4);
+  --sidebar-border: rgba(255, 255, 255, 0.5);
+  --sidebar-active-bg: rgba(59, 130, 246, 0.2);
+  --sidebar-active-border: rgba(59, 130, 246, 0.5);
+  --sidebar-active-text: #1d4ed8;
+
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --header-bg: rgba(255, 255, 255, 0.1);
+
+  --code-bg: #1e293b;
+  --code-text: #f8f8f2;
+
+  /* Filter to turn white logo into Dark Blue #1e3a8a */
+  /* Calculate using https://codepen.io/sosuke/pen/Pjoqqp */
+  --logo-filter: brightness(0) saturate(100%) invert(18%) sepia(42%) saturate(3685%) hue-rotate(209deg) brightness(97%) contrast(96%);
+}
+
+[data-theme='dark'] {
+  /* Dark Mode Palette - Deep Space Blue */
+  --bg-gradient-start: #020b23;
+  --bg-gradient-mid: #001233;
+  --bg-gradient-end: #0a1128;
+
+  --text-primary: #e2e8f0;
+  /* Light Gray/White */
+  --text-secondary: #cbd5e1;
+  /* Lighter Slate */
+  --text-nav: #f8fafc;
+
+  --sidebar-bg: rgba(30, 41, 59, 0.4);
+  --sidebar-border: rgba(51, 65, 85, 0.5);
+  --sidebar-active-bg: rgba(59, 130, 246, 0.3);
+  --sidebar-active-border: rgba(96, 165, 250, 0.5);
+  --sidebar-active-text: #60a5fa;
+  /* Lighter blue for dark mode */
+
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(51, 65, 85, 0.5);
+  --header-bg: rgba(15, 23, 42, 0.3);
+
+  --code-bg: #020617;
+  /* Very dark slate */
+  --code-text: #e2e8f0;
+
+  /* White Logo for Dark Mode (No Filter needed if source is white) */
+  --logo-filter: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-mid), var(--bg-gradient-end));
+  background-attachment: fixed;
+  /* Keep gradient fixed while content scrolls */
+  color: var(--text-secondary);
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  overflow-y: auto;
+  /* restore natural page scroll */
+}
+
+/* App Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 3rem;
+  z-index: 50;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.logo-image {
+  height: 50px;
+  width: auto;
+  filter: var(--logo-filter);
+  transition: filter 0.3s ease;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-nav);
+  font-weight: 400;
+  font-size: 0.95rem;
+  position: relative;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background-color: currentColor;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-nav);
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Layout */
+.main-layout {
+  display: flex;
+  padding-top: 80px;
+  /* Space for fixed header */
+  min-height: calc(100vh - 80px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 320px;
+  padding: 1.5rem;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  padding-top: 100px;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.topic-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  /* rounded-xl */
+  text-decoration: none;
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--sidebar-border);
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.topic-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.topic-item.active {
+  background-color: var(--sidebar-active-bg);
+  border: 1px solid var(--sidebar-active-border);
+  color: var(--sidebar-active-text);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.topic-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  /* text-xs */
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.topic-title {
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+/* Content Area */
+.content-area {
+  margin-left: 340px;
+  /* Offset for fixed sidebar */
+  flex: 1;
+  padding: 2rem 4rem;
+  min-height: 100vh;
+  /* Removed overflow-y: auto to let page scroll naturally */
+}
+
+/* Topic Content */
+.topic-content {
+  max-width: 63rem;
+  /* max-w-6xl */
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* Minimized Sidebar Styles */
+.sidebar.minimized {
+  width: 100px;
+  padding: 1rem;
+  padding-top: 100px;
+  align-items: center;
+}
+
+.sidebar.minimized .sidebar-header {
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+}
+
+.sidebar.minimized .sidebar-header h2 {
+  display: none;
+}
+
+.sidebar.minimized .topic-item {
+  justify-content: center;
+  padding: 0;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.sidebar.minimized .topic-title {
+  display: none;
+}
+
+.sidebar.minimized .topic-number {
+  font-size: 1.2rem;
+  opacity: 1;
+  font-weight: 800;
+}
+
+/* Content Area Adjustment */
+.content-area.expanded {
+  margin-left: 120px;
+  /* Adjusted for smaller sidebar */
+}
+
+.topic-heading {
+  font-family: 'Poppins', sans-serif;
+  /* Assumed font for headings */
+  font-size: 3rem;
+  /* ~text-4xl */
+  font-weight: 700;
+  color: var(--text-primary);
+  /* Actually looks black/dark in screenshot, but HTML says text-blue-900/white */
+  margin-bottom: 2rem;
+  /* Gradient text effect could be applied here if desired, but sticking to solid for readability */
+  letter-spacing: -1px;
+}
+
+.section-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  /* text-xl */
+  font-weight: 600;
+  color: var(--sidebar-active-text);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.section-text,
+.section-list li,
+.section-list-ordered li {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.section-list {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-bottom: 1rem;
+  color: var(--text-gray-700);
+}
+
+.section-list li {
+  margin-bottom: 0.5rem;
+}
+
+.section-list-ordered {
+  list-style-type: decimal;
+  list-style-position: inside;
+  margin-bottom: 1rem;
+  color: var(--text-gray-700);
+}
+
+/* Code Blocks */
+.code-block-wrapper {
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #374151;
+  /* border-gray-700 */
+}
+
+.code-block {
+  background-color: var(--code-bg);
+  padding: 1rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: var(--code-text);
+  overflow-x: auto;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding-top: 1rem;
+    display: none;
+    /* In a real app we'd toggle it */
+  }
+
+  .content-area {
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
+
+/* =========================================
+   Rich Content Styling (The "Fun" Update)
+   ========================================= */
+
+/* Main Wrapper */
+.topic-content-wrapper {
+  max-width: 65rem;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+/* --- Animations --- */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.content-section,
+.code-section,
+.feature-card {
+  animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+  /* Star invisible */
+}
+
+/* Stagger animations purely via CSS :nth-child would be hard without knowing structure.
+   Instead we'll just let them animate on load quickly or use a small delay if possible.
+   For now, a global clean fade up is better than complex JS observers for this task. */
+.content-section:nth-of-type(1) {
+  animation-delay: 0.1s;
+}
+
+.content-section:nth-of-type(2) {
+  animation-delay: 0.2s;
+}
+
+.content-section:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+.content-section:nth-of-type(4) {
+  animation-delay: 0.4s;
+}
+
+.content-section:nth-of-type(5) {
+  animation-delay: 0.5s;
+}
+
+.content-section:nth-of-type(n+6) {
+  animation-delay: 0.6s;
+}
+
+
+/* --- Typography Gradients --- */
+.topic-heading-display,
+.section-title-display,
+.code-heading,
+.datatype-header,
+.sidebar-header h2 {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  /* Blue to Cyan */
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* standard property */
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+  /* Ensure gradient doesn't span full block width unnecessarily */
+}
+
+/* Topic Title needs special handling to preserve ellipsis truncation */
+.topic-title {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Do not set width: fit-content here as it breaks flexbox truncation */
+}
+
+[data-theme='dark'] .topic-heading-display,
+[data-theme='dark'] .section-title-display,
+[data-theme='dark'] .code-heading,
+[data-theme='dark'] .datatype-header,
+[data-theme='dark'] .sidebar-header h2 {
+  background: linear-gradient(135deg, #60a5fa 0%, #2dd4bf 100%);
+  /* Lighter Blue to Teal */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme='dark'] .topic-title {
+  background: linear-gradient(135deg, #60a5fa 0%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* Display Typography Overrides */
+.topic-heading-display {
+  font-family: 'Poppins', sans-serif;
+  font-size: 4rem;
+  /* Larger */
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  filter: drop-shadow(0 4px 6px rgba(37, 99, 235, 0.2));
+  /* Subtle glowing shadow */
+}
+
+.topic-divider {
+  width: 120px;
+  height: 6px;
+  background: linear-gradient(to right, #2563eb, #06b6d4);
+  border-radius: 3px;
+  margin-bottom: 4rem;
+  opacity: 1;
+}
+
+.section-title-display {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  /* Subtle underline */
+  width: 100%;
+}
+
+[data-theme='dark'] .section-title-display {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+
+.section-text-display {
+  font-size: 1.15rem;
+  /* Larger text */
+  line-height: 1.9;
+  color: var(--text-secondary);
+  background: var(--glass-bg);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-text-display:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px -10px rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.content-section {
+  margin-bottom: 4rem;
+  /* More breathing room */
+}
+
+/* --- Features Grid --- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  padding: 1.8rem;
+  border-radius: 1.2rem;
+  border: 1px solid var(--sidebar-border);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Bouncy spring */
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shine effect on card hover */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.feature-card:hover::before {
+  left: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+  border-color: var(--sidebar-active-text);
+}
+
+/* --- Python Feature Cards Specifics --- */
+.python-feature-card {
+  border-top: 4px solid #f59e0b;
+  /* Amber */
+  align-items: center;
+  text-align: center;
+  /* Subtle gradient background */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+  padding: 2.5rem 1.5rem;
+}
+
+[data-theme='dark'] .python-feature-card {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);
+}
+
+.python-feature-card .feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.python-feature-card:hover .feature-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.feature-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Use different border colors for variety using nth-child */
+.python-feature-card:nth-child(4n+1) {
+  border-top-color: #ef4444;
+}
+
+/* Red */
+.python-feature-card:nth-child(4n+2) {
+  border-top-color: #3b82f6;
+}
+
+/* Blue */
+.python-feature-card:nth-child(4n+3) {
+  border-top-color: #10b981;
+}
+
+/* Green */
+.python-feature-card:nth-child(4n+4) {
+  border-top-color: #8b5cf6;
+}
+
+/* Purple */
+
+/* --- Data Type Cards Specifics --- */
+.datatype-card {
+  justify-content: center;
+  text-align: center;
+  border-left: none;
+  /* remove old style */
+  border-top: 5px solid var(--sidebar-active-text);
+  /* Top thick border */
+}
+
+.datatype-header {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.datatype-example {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95rem;
+  background: rgba(37, 99, 235, 0.1);
+  /* Light blue tint */
+  padding: 0.8rem;
+  border-radius: 0.6rem;
+  color: var(--sidebar-active-text);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  font-weight: 500;
+}
+
+[data-theme='dark'] .datatype-example {
+  background: rgba(37, 99, 235, 0.2);
+  color: #bae6fd;
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+/* --- Table Styles --- */
+.table-container {
+  overflow-x: auto;
+  border-radius: 1rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  background: var(--glass-bg);
+}
+
+.topic-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  /* Ensure readability on small screens */
+}
+
+.topic-table th {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 2px solid var(--sidebar-border);
+}
+
+.topic-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--sidebar-border);
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.topic-table tr:last-child td {
+  border-bottom: none;
+}
+
+.topic-table tr:hover td {
+  background: rgba(37, 99, 235, 0.05);
+  /* Subtle blue highlight on hover */
+}
+
+[data-theme='dark'] .topic-table th {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(45, 212, 191, 0.2) 100%);
+}
+
+[data-theme='dark'] .topic-table tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Styling Lists --- */
+.section-list-styled {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-list-styled li {
+  display: flex;
+  align-items: flex-start;
+  /* Align checkmark to top if text wraps */
+  gap: 1rem;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s;
+}
+
+[data-theme='dark'] .section-list-styled li {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.section-list-styled li:hover {
+  transform: translateX(5px);
+  background: var(--sidebar-active-bg);
+}
+
+.list-bullet {
+  font-size: 0;
+  /* Hide text "Checking" */
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sidebar-active-text);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.list-bullet::after {
+  content: '✓';
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* --- Ordered Step Lists --- */
+.section-list-ordered-display {
+  list-style: none;
+  counter-reset: step-counter;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-list-ordered-display li {
+  position: relative;
+  padding-left: 4.5rem;
+}
+
+.step-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  color: white;
+  font-weight: 700;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+[data-theme='dark'] .step-number {
+  background: #1e3a8a;
+  /* Dark Blue */
+  color: #e0f2fe;
+  /* Very light blue text for contrast */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+}
+
+.step-content {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  padding-top: 0.3rem;
+  /* Visual alignment with circle */
+}
+
+
+/* --- Terminal Window (The "Pro" Code Block) --- */
+.code-section {
+  margin: 2.5rem 0;
+}
+
+.code-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.terminal-window {
+  background: #1e1e1e;
+  /* VS Code Dark style base */
+  border-radius: 0.8rem;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: perspective(1000px) rotateX(0deg);
+  transition: transform 0.3s ease;
+}
+
+.terminal-window:hover {
+  transform: perspective(1000px) rotateX(1deg);
+}
+
+.terminal-header {
+  background: #2d2d2d;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Center title */
+  position: relative;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+.terminal-controls {
+  position: absolute;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.control.red {
+  background: #ff5f56;
+}
+
+.control.yellow {
+  background: #ffbd2e;
+}
+
+.control.green {
+  background: #27c93f;
+}
+
+.terminal-title {
+  color: #999;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 0;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Syntax Highlighting Simulation */
+.terminal-body code {
+  color: #d4d4d4;
+  /* Base text */
+}
+
+/* We can't easily parse syntax without a library, but we can give it a nice colorful container */
+/* To make it "fun", let's give the terminal a subtle glow depending on theme */
+[data-theme='dark'] .terminal-window {
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  /* Blue glow */
+  box-shadow: 0 0 30px rgba(96, 165, 250, 0.1);
+}
+
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: 1rem;
+  color: var(--text-primary);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--glass-border);
+  border-top: 4px solid var(--sidebar-active-text);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
